@@ -1,0 +1,62 @@
+name: drmips
+base: core22
+version: 2.0.4
+title: DrMIPS
+summary: Educational MIPS simulator
+description: |
+  DrMIPS is a graphical simulator of the MIPS processor to support computer
+  architecture teaching and learning. It is intuitive, versatile and
+  configurable.
+
+  The simulator is available not only for personal computers but also for
+  Android devices, especially tablets.
+license: GPL-3.0
+website: https://github.com/brunonova/drmips 
+source-code: https://github.com/brunonova/drmips 
+
+grade: stable
+confinement: strict
+
+apps:
+  drmips:
+    command: bin/drmips
+    plugs:
+      - home
+      - opengl
+      - desktop
+      - x11
+      - wayland
+
+layout:
+  # xprop needs to be in /usr/bin/xprop
+  /usr/bin/xprop:
+    symlink: $SNAP/usr/bin/xprop
+
+parts:
+  drmips:
+    plugin: dump
+    source: https://github.com/brunonova/drmips/releases/download/v${SNAPCRAFT_PROJECT_VERSION}/DrMIPS-v${SNAPCRAFT_PROJECT_VERSION}.zip
+    stage-packages:
+      - openjdk-8-jre
+      - fonts-dejavu  # include some required fonts, or else Java crashes
+      - x11-utils
+    # Remove unnecessary folders and files
+    stage:
+      - -usr/include
+      - -usr/sbin
+      - -usr/share/applications
+      - -usr/share/apport
+      - -usr/share/avahi
+      - -usr/share/doc
+      - -usr/share/doc-base
+      - -usr/share/lintian
+      - -usr/share/man
+      - -var
+      # These libraries are large, and they don't seem to be needed
+      - -usr/lib/*/libicudata.so*
+      - -usr/lib/*/libLLVM*.so*
+  bin:
+    plugin: dump
+    source: ./bin
+    organize:
+      drmips.sh: bin/drmips
