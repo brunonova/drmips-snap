@@ -55,6 +55,8 @@ parts:
       # These libraries are large, and they don't seem to be needed
       - -usr/lib/*/libicudata.so*
       - -usr/lib/*/libLLVM*.so*
+      # Remove symlinks pointing outside of snap
+      - -usr/lib/jvm/java-8-openjdk-*/jre/lib/security/cacerts
   bin:
     plugin: dump
     source: ./bin
